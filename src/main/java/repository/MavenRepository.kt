@@ -13,7 +13,7 @@ import repository.mvn.MvnRepositoryApi
  */
 class MavenRepository: PackageRepository {
 
-    var api = MvnRepositoryApi.create()
+    private val api = MvnRepositoryApi.create()
 
     override fun search(artifact: Artifact): Dependency {
         val page = api.search(artifact.scheme)

@@ -1,7 +1,10 @@
+
+import com.squareup.moshi.Moshi
 import model.Artifact
 import model.Dependency
 import model.PackageRepository
 import repository.MavenRepository
+import utils.LocalDateTimeAdapter
 
 /**
  * @since 2019
@@ -66,11 +69,19 @@ fun main() {
     val dependencies = mutableListOf<Dependency>()
 
     artifacts.mapIndexed { index, artifact ->
-        println("Process $index/${artifacts.size}: ${artifact.scheme}")
+        println("Process ${index + 1}/${artifacts.size}: ${artifact.scheme}")
         repositories.map { repository ->
-            dependencies.add(repository.search(artifact))
+            try {
+                dependencies.add(repository.search(artifact))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
-    println(dependencies)
+    val moshi = Moshi.Builder()
+        .add(LocalDateTimeAdapter())
+        .build()
+    val json = moshi.toJson(dependencies)
+    println(json)
 }
