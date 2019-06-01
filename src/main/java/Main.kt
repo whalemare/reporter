@@ -1,10 +1,10 @@
-
 import com.squareup.moshi.Moshi
 import model.Artifact
 import model.Dependency
 import model.PackageRepository
 import repository.MavenRepository
 import utils.LocalDateTimeAdapter
+import java.io.File
 
 /**
  * @since 2019
@@ -83,5 +83,7 @@ fun main() {
         .add(LocalDateTimeAdapter())
         .build()
     val json = moshi.toJson(dependencies)
+    val file = File("report.txt")
+    file.writeText(json)
     println(json)
 }
