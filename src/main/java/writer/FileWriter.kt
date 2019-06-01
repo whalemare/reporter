@@ -2,7 +2,7 @@ package writer
 
 import com.squareup.moshi.Moshi
 import model.Dependency
-import toJson
+import utils.toJson
 import utils.LocalDateTimeAdapter
 import java.io.File
 

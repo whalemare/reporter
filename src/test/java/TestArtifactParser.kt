@@ -3,6 +3,7 @@ import model.Artifact
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertIterableEquals
 import org.junit.jupiter.api.Test
+import parser.ArtifactParser
 
 /**
  * @since 2019
@@ -16,7 +17,7 @@ class TestArtifactParser {
     fun `should return properly size of list`() {
         parser = ArtifactParser(
             // first line will be filtered in blacklist
-            """
+            rawDependencies = """
             implementation fileTree(dir: 'libs', include: ['*.jar'])
             implementation 'com.android.support:support-compat:28.0.0'
 
@@ -28,7 +29,7 @@ class TestArtifactParser {
             implementation 'com.google.auto.factory:auto-factory:1.0-beta3'
             annotationProcessor 'com.google.auto.factory:auto-factory:1.0-beta3'
             """,
-            listOf(
+            prefixes = listOf(
                 "implementation",
                 "annotationProcessor",
                 "kapt",

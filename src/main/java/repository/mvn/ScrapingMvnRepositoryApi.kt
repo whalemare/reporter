@@ -12,7 +12,8 @@ import java.util.*
 
 internal class ScrapingMvnRepositoryApi(
     private val baseUrl: HttpUrl,
-    private val okHttpClient: OkHttpClient) : MvnRepositoryApi {
+    private val okHttpClient: OkHttpClient
+) : MvnRepositoryApi {
 
     companion object {
 

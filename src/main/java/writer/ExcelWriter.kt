@@ -24,7 +24,7 @@ class ExcelWriter: Writer<Dependency> {
         /* CreationHelper helps us create instances of various things like DataFormat,
            Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
         val createHelper = workbook.creationHelper
-        val sheet = workbook.createSheet("Dependencies")
+        val sheet = workbook.createSheet("Зависимости")
 
         // Create a Font for styling header cells
         val headerFont = workbook.createFont()

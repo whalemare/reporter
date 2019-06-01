@@ -1,3 +1,5 @@
+package utils
+
 import com.squareup.moshi.Moshi
 
 /**

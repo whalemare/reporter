@@ -1,4 +1,7 @@
+package parser
+
 import model.Artifact
+import model.Provider
 
 /**
  * @since 2019
@@ -16,7 +19,18 @@ class ArtifactParser(
     ),
     private val blacklist: List<String> = listOf(
         "fileTree(dir: 'libs', include: ['*.jar'])"
-    )
+    ),
+    private val trimmer: (input: String) -> String = {
+        var result = it
+        result = result.trim()
+        result = result.removeSurrounding("\'")
+        result = result.removeSurrounding("\"")
+        result = result.removeSurrounding("\\`")
+        result = result.removeSuffix("(")
+        result = result.removePrefix(")")
+        result = result.removePrefix("{")
+        result
+    }
 ) : Provider<List<Artifact>> {
 
     override fun provide(): List<Artifact> {
@@ -42,11 +56,7 @@ class ArtifactParser(
                     withoutPrefix = withoutPrefix.removePrefix(prefix)
                 }
 
-                withoutPrefix = withoutPrefix.trim()
-                withoutPrefix = withoutPrefix.removeSurrounding("\'")
-                withoutPrefix = withoutPrefix.removeSurrounding("\"")
-                withoutPrefix = withoutPrefix.removeSurrounding("\\`")
-                withoutPrefix
+                trimmer.invoke(withoutPrefix)
             }
             .map {
                 val array = it.split(":")

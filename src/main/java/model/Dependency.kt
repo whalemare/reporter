@@ -11,5 +11,6 @@ data class Dependency(
     val description: String,
     val url: String,
     val artifact: Artifact,
+    val license: String? = null,
     val lastRelease: LocalDate? = null
 )

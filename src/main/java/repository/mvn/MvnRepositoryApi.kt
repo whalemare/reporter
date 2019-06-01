@@ -1,6 +1,8 @@
 
 package repository.mvn
 
+import com.ihsanbal.logging.Level
+import com.ihsanbal.logging.LoggingInterceptor
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import java.util.*
@@ -41,8 +43,21 @@ interface MvnRepositoryApi {
          * with a default http client.
          */
         fun create(url: HttpUrl = HttpUrl.parse("https://mvnrepository.com/")!!,
-                   okHttpClient: OkHttpClient = OkHttpClient()): MvnRepositoryApi {
-            return ScrapingMvnRepositoryApi(url, okHttpClient)
+                   okHttpClient: OkHttpClient.Builder = OkHttpClient.Builder()): MvnRepositoryApi {
+            okHttpClient.addInterceptor(
+                LoggingInterceptor.Builder()
+                    .loggable(true)
+                    .setLevel(Level.HEADERS)
+                    .log(0)
+                    .request("Request")
+                    .response("Response")
+                    .logger { level, tag, message ->
+                        println(message)
+                    }
+                    .build()
+            )
+
+            return ScrapingMvnRepositoryApi(url, okHttpClient.build())
         }
     }
 }
