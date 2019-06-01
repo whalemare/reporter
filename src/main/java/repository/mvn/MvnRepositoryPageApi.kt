@@ -16,13 +16,13 @@ internal interface MvnRepositoryPageApi {
     @GET("/repos")
     fun getRepositoriesPage(@Query("p") page: Int): Call<RepositoriesPage>
 
-    @GET("/artifact/{groupId}/{artifactId}")
-    fun getArtifactVersionsPage(@Path("groupId") groupId: String,
-                                @Path("artifactId") artifactId: String): Call<ArtifactVersionsPage>
+    @GET("/artifact/{group}/{artifact}")
+    fun getArtifactVersionsPage(@Path("group") groupId: String,
+                                @Path("artifact") artifactId: String): Call<ArtifactVersionsPage>
 
-    @GET("/artifact/{groupId}/{artifactId}/{version}")
-    fun getArtifactPage(@Path("groupId") groupId: String,
-                        @Path("artifactId") artifactId: String,
+    @GET("/artifact/{group}/{artifact}/{version}")
+    fun getArtifactPage(@Path("group") groupId: String,
+                        @Path("artifact") artifactId: String,
                         @Path("version") version: String): Call<ArtifactPage>
 
 }

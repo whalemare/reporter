@@ -1,22 +1,29 @@
-//package repository
-//
-//import model.Dependency
-//import model.Package
-//import model.PackageRepository
-//import repository.mvn.ArtifactEntry
-//import repository.mvn.MvnRepositoryApi
-//
-//
-//
-///**
-// * @since 2019
-// * @author Anton Vlasov - whalemare
-// */
-//class MavenRepository: PackageRepository {
-//
-//    var api = MvnRepositoryApi.create()
-//
-//    override fun search(artifact: Package): Dependency {
-////        api.getArtifact()
-//    }
-//}
+package repository
+
+import model.Artifact
+import model.Dependency
+import model.PackageRepository
+import repository.mvn.MvnRepositoryApi
+
+
+
+/**
+ * @since 2019
+ * @author Anton Vlasov - whalemare
+ */
+class MavenRepository: PackageRepository {
+
+    var api = MvnRepositoryApi.create()
+
+    override fun search(artifact: Artifact): Dependency {
+        val page = api.search(artifact.scheme)
+        val mavenArtifact = page.items.first()
+        return Dependency(
+            name = mavenArtifact.id,
+            description = mavenArtifact.description,
+            url = mavenArtifact.id,
+            artifact = artifact,
+            lastRelease = mavenArtifact.lastRelease
+        )
+    }
+}

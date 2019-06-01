@@ -1,5 +1,7 @@
-import model.Package
+import model.Artifact
+import model.Dependency
 import model.PackageRepository
+import repository.MavenRepository
 
 /**
  * @since 2019
@@ -7,7 +9,7 @@ import model.PackageRepository
  */
 
 fun main() {
-    val parser: Provider<List<Package>> = ArtifactParser(
+    val parser: Provider<List<Artifact>> = ArtifactParser(
         """
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:support-compat:28.0.0'
@@ -58,11 +60,17 @@ fun main() {
     """.trimIndent()
     )
     val artifacts = parser.provide()
-    val repositories = listOf<PackageRepository>()
+    val repositories = listOf<PackageRepository>(
+        MavenRepository()
+    )
+    val dependencies = mutableListOf<Dependency>()
 
-    artifacts.map { artifact ->
+    artifacts.mapIndexed { index, artifact ->
+        println("Process $index/${artifacts.size}: ${artifact.scheme}")
         repositories.map { repository ->
-            repository.search(artifact)
+            dependencies.add(repository.search(artifact))
         }
     }
+
+    println(dependencies)
 }

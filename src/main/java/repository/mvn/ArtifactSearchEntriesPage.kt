@@ -6,6 +6,7 @@ import pl.droidsonroids.jspoon.ElementConverter
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 internal class ArtifactSearchEntriesPage {
 
@@ -41,10 +42,10 @@ internal class ArtifactSearchEntriesPage {
 
             private const val PREFIX = "Last Release on "
 
-            override fun convert(root: Element, selector: Selector): LocalDate? {
-                val node = root.selectFirst(selector.value)?.text() ?: return null
+            override fun convert(root: Element?, selector: Selector): LocalDate? {
+                val node = root?.selectFirst(selector.value)?.text() ?: return null
                 val str = node.substringAfter(PREFIX)
-                return LocalDate.parse(str, DateTimeFormatter.ofPattern("MMM d, yyyy"))
+                return LocalDate.parse(str, DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US))
             }
 
         }

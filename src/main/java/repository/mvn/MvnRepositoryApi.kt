@@ -22,7 +22,7 @@ interface MvnRepositoryApi {
      */
     fun getArtifact(groupId: String,
                     artifactId: String,
-                    version: String): Optional<Artifact>
+                    version: String): Optional<MavenArtifact>
 
     /**
      * Retrieves the available indexed versions for the [groupId]:[artifactId].

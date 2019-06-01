@@ -11,8 +11,8 @@ import java.net.URI
  */
 internal class UriElementConverter : ElementConverter<URI> {
 
-    override fun convert(root: Element, selector: Selector): URI? {
-        val uri = root.selectFirst(selector.value)?.attr(selector.attr)
+    override fun convert(root: Element?, selector: Selector): URI? {
+        val uri = root?.selectFirst(selector.value)?.attr(selector.attr)
         return if (uri != null) URI.create(uri) else null
     }
 

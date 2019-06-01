@@ -1,5 +1,5 @@
 
-import model.Package
+import model.Artifact
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertIterableEquals
 import org.junit.jupiter.api.Test
@@ -63,8 +63,8 @@ class TestArtifactParser {
         )
         val artifacts = parser.provide()
         val expected = listOf(
-            Package("com.android.support:support-compat:28.0.0", "com.android.support", "support-compat", "28.0.0"),
-            Package("org.glassfish:javax.annotation:10.0-b28", "org.glassfish", "javax.annotation", "10.0-b28")
+            Artifact("com.android.support:support-compat:28.0.0", "com.android.support", "support-compat", "28.0.0"),
+            Artifact("org.glassfish:javax.annotation:10.0-b28", "org.glassfish", "javax.annotation", "10.0-b28")
         )
         assertIterableEquals(expected, artifacts)
     }

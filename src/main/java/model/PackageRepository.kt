@@ -5,5 +5,5 @@ package model
  * @author Anton Vlasov - whalemare
  */
 interface PackageRepository {
-    fun search(artifact: Package): Dependency
+    fun search(artifact: Artifact): Dependency
 }

@@ -8,7 +8,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import pl.droidsonroids.retrofit2.JspoonConverterFactory
 import retrofit2.Retrofit
-import java.time.ZoneId
 import java.util.*
 
 internal class ScrapingMvnRepositoryApi(
@@ -72,7 +71,7 @@ internal class ScrapingMvnRepositoryApi(
         return body.versions
     }
 
-    override fun getArtifact(groupId: String, artifactId: String, version: String): Optional<Artifact> {
+    override fun getArtifact(groupId: String, artifactId: String, version: String): Optional<MavenArtifact> {
         val response = pageApi.getArtifactPage(groupId, artifactId, version).execute()
         if (!response.isSuccessful) {
             logger.warn("Request to $baseUrl failed while fetching artifact '" +
@@ -80,8 +79,8 @@ internal class ScrapingMvnRepositoryApi(
             return Optional.empty()
         }
         val body = response.body() ?: return Optional.empty()
-        val localDate = body.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        val artifact = Artifact(groupId, artifactId, version, body.license, body.homepage, localDate, body.snippets)
+//        val localDate = body.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        val artifact = MavenArtifact(groupId, artifactId, version, body.license, body.homepage, body.snippets)
 
         return Optional.of(artifact)
     }

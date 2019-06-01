@@ -1,4 +1,4 @@
-import model.Package
+import model.Artifact
 
 /**
  * @since 2019
@@ -17,9 +17,9 @@ class ArtifactParser(
     private val blacklist: List<String> = listOf(
         "fileTree(dir: 'libs', include: ['*.jar'])"
     )
-) : Provider<List<Package>> {
+) : Provider<List<Artifact>> {
 
-    override fun provide(): List<Package> {
+    override fun provide(): List<Artifact> {
         return rawDependencies.trimIndent()
             .split("\n")
             .filter {
@@ -50,7 +50,7 @@ class ArtifactParser(
             }
             .map {
                 val array = it.split(":")
-                Package(it, array[0], array[1], array[2])
+                Artifact(it, array[0], array[1], array[2])
             }
     }
 }

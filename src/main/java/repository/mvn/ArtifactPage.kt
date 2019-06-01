@@ -5,7 +5,6 @@ import org.jsoup.nodes.Element
 import pl.droidsonroids.jspoon.ElementConverter
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.net.URI
-import java.util.*
 
 internal class ArtifactPage {
 
@@ -16,8 +15,8 @@ internal class ArtifactPage {
         attr = "href", converter = UriElementConverter::class)
     lateinit var homepage: URI
 
-    @Selector("#maincontent > table > tbody > tr:nth-child(4) > td", format = "(MMM dd, yyyy)")
-    lateinit var date: Date
+//    @Selector("#maincontent > table > tbody > tr:nth-child(4) > td", format = "(MMM dd, yyyy)")
+//    lateinit var date: Date
 
     @Selector("#snippets", converter = SnippetElementConverter::class)
     lateinit var snippets: List<Snippet>
@@ -25,8 +24,8 @@ internal class ArtifactPage {
 
     internal class SnippetElementConverter : ElementConverter<List<Snippet>> {
 
-        override fun convert(node: Element, selector: Selector): List<Snippet>? {
-            val elem = node.selectFirst(selector.value) ?: return emptyList()
+        override fun convert(node: Element?, selector: Selector): List<Snippet>? {
+            val elem = node?.selectFirst(selector.value) ?: return emptyList()
 
             // Under this element there are <textarea>s with id '$snippetType-a'
             val snippets = mutableListOf<Snippet>()

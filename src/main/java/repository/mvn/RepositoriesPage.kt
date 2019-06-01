@@ -29,8 +29,8 @@ internal class RepositoriesPage {
 
         companion object IdConverter : ElementConverter<String> {
 
-            override fun convert(node: Element, selector: Selector): String? {
-                val href = node.selectFirst(selector.value)?.attr("href")
+            override fun convert(node: Element?, selector: Selector): String? {
+                val href = node?.selectFirst(selector.value)?.attr("href")
                 // hrefs are in the form of: /repos/{id}
                 return href?.substringAfterLast("/")
             }
