@@ -30,6 +30,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.squareup.moshi/moshi
     implementation group: 'com.squareup.moshi', name: 'moshi', version: '1.8.0'
 
+    // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.0'
+
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.2'
     testImplementation ('org.junit.jupiter:junit-jupiter-params:5.0.2')
     testRuntime ('org.junit.jupiter:junit-jupiter-engine:5.0.2')

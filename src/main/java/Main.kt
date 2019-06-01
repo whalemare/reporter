@@ -1,10 +1,11 @@
-import com.squareup.moshi.Moshi
+
 import model.Artifact
 import model.Dependency
 import model.PackageRepository
 import repository.MavenRepository
-import utils.LocalDateTimeAdapter
-import java.io.File
+import writer.ConsoleWriter
+import writer.ExcelWriter
+import writer.FileWriter
 
 /**
  * @since 2019
@@ -66,6 +67,12 @@ fun main() {
     val repositories = listOf<PackageRepository>(
         MavenRepository()
     )
+    val writers = listOf(
+        ConsoleWriter(),
+        FileWriter(),
+        ExcelWriter()
+    )
+
     val dependencies = mutableListOf<Dependency>()
 
     artifacts.mapIndexed { index, artifact ->
@@ -79,11 +86,7 @@ fun main() {
         }
     }
 
-    val moshi = Moshi.Builder()
-        .add(LocalDateTimeAdapter())
-        .build()
-    val json = moshi.toJson(dependencies)
-    val file = File("report.txt")
-    file.writeText(json)
-    println(json)
+    writers.forEach { writer ->
+        writer.write(dependencies)
+    }
 }
