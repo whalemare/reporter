@@ -45,9 +45,9 @@ class FileController(private val file: File) : Callable<Int> {
         }
 
         val linesTopDeps = lines.subList(startBlockIndex, lines.size - 1)
-        var index = 0;
+        var index = 0
         for (line in linesTopDeps) {
-            index++;
+            index++
             if (line.endsWith("{")) {
                 countOpenBrackets++
             }
