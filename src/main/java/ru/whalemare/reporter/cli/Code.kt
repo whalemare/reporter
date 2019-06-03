@@ -8,4 +8,5 @@ object Code {
     const val SUCCESS = 0
     const val FILE_NOT_EXISTS = 404
     const val USAGE_ERROR = 64
+    const val INTERNAL_ERROR = 70
 }

@@ -2,7 +2,7 @@
 package ru.whalemare.reporter.repository.mvn
 
 import java.net.URI
-import java.time.LocalDate
+import java.util.*
 
 /**
  * Represents a Maven name.
@@ -22,6 +22,9 @@ data class MavenArtifact(
     val version: String,
     val license: String,
     val homepage: URI,
-//    val date: LocalDate,
-    val snippets: List<Snippet>
+    val description: String,
+    val date: Date?,
+    val snippets: List<Snippet>,
+    val name: String,
+    val usedBy: String
 )

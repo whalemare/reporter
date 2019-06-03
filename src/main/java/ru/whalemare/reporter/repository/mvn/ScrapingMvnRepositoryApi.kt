@@ -1,4 +1,3 @@
-
 package ru.whalemare.reporter.repository.mvn
 
 import okhttp3.HttpUrl
@@ -63,8 +62,10 @@ internal class ScrapingMvnRepositoryApi(
     override fun getArtifactVersions(groupId: String, artifactId: String): List<String> {
         val response = pageApi.getArtifactVersionsPage(groupId, artifactId).execute()
         if (!response.isSuccessful) {
-            logger.warn("Request to $baseUrl failed while fetching versions for name '" +
-                "$groupId:$artifactId', got: ${response.code()}")
+            logger.warn(
+                "Request to $baseUrl failed while fetching versions for name '" +
+                        "$groupId:$artifactId', got: ${response.code()}"
+            )
             return emptyList()
         }
 
@@ -75,19 +76,25 @@ internal class ScrapingMvnRepositoryApi(
     override fun getArtifact(groupId: String, artifactId: String, version: String): Optional<MavenArtifact> {
         val response = pageApi.getArtifactPage(groupId, artifactId, version).execute()
         if (!response.isSuccessful) {
-            logger.warn("Request to $baseUrl failed while fetching name '" +
-                "$groupId:$artifactId:$version', got: ${response.code()}")
+            logger.warn(
+                "Request to $baseUrl failed while fetching name '" +
+                        "$groupId:$artifactId:$version', got: ${response.code()}"
+            )
             return Optional.empty()
         }
         val body = response.body() ?: return Optional.empty()
 //        val localDate = body.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         val artifact = MavenArtifact(
-            groupId,
-            artifactId,
-            version,
-            body.license,
-            body.homepage,
-            body.snippets
+            groupId = groupId,
+            id = artifactId,
+            name = body.name,
+            usedBy = body.usedBy,
+            version = version,
+            license = body.license,
+            homepage = body.homepage,
+            description = body.description,
+            snippets = body.snippets,
+            date = body.releaseDate
         )
 
         return Optional.of(artifact)
@@ -116,7 +123,8 @@ internal class ScrapingMvnRepositoryApi(
                 )
             }
 
-        val totalPages = Math.min(Math.ceil((body.totalResults / MAX_LIMIT).toDouble()).toInt(),
+        val totalPages = Math.min(
+            Math.ceil((body.totalResults / MAX_LIMIT).toDouble()).toInt(),
             MAX_PAGE
         )
         return Page(

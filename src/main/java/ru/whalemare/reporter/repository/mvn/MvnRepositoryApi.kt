@@ -47,7 +47,7 @@ interface MvnRepositoryApi {
             okHttpClient.addInterceptor(
                 LoggingInterceptor.Builder()
                     .loggable(true)
-                    .setLevel(Level.HEADERS)
+                    .setLevel(Level.BASIC)
                     .log(0)
                     .request("Request")
                     .response("Response")

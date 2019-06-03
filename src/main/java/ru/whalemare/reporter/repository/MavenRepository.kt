@@ -4,9 +4,7 @@ import ru.whalemare.reporter.model.Artifact
 import ru.whalemare.reporter.model.Dependency
 import ru.whalemare.reporter.model.PackageRepository
 import ru.whalemare.reporter.repository.mvn.ArtifactEntry
-import ru.whalemare.reporter.repository.mvn.MavenArtifact
 import ru.whalemare.reporter.repository.mvn.MvnRepositoryApi
-import java.util.*
 
 
 /**
@@ -19,21 +17,17 @@ class MavenRepository : PackageRepository {
 
     override fun search(artifact: Artifact): Dependency {
 //        val mavenArtifact = list(name).first()
-        val mavenArtifact = one(artifact).get()
+        val mavenArtifact = api.getArtifact(artifact.group, artifact.name, artifact.version).get()
 
-        return return Dependency(
-            name = mavenArtifact.id,
-//            description = mavenArtifact.description,
-            description = "",
-            url = mavenArtifact.id,
-            artifact = artifact,
-            license = mavenArtifact.license
-//            lastRelease = mavenArtifact.lastRelease
+        val version = if (artifact.version.isBlank()) mavenArtifact.version else artifact.version
+        return Dependency(
+            name = mavenArtifact.name,
+            description = mavenArtifact.description,
+            url = mavenArtifact.homepage.toString(),
+            artifact = artifact.copy(version = version),
+            license = mavenArtifact.license,
+            releaseDate = mavenArtifact.date
         )
-    }
-
-    fun one(artifact: Artifact): Optional<MavenArtifact> {
-        return api.getArtifact(artifact.group, artifact.name, artifact.version)
     }
 
     fun list(artifact: Artifact): List<ArtifactEntry> {

@@ -1,6 +1,6 @@
 package ru.whalemare.reporter.model
 
-import java.time.LocalDate
+import java.util.*
 
 /**
  * @since 2019
@@ -12,5 +12,5 @@ data class Dependency(
     val url: String,
     val artifact: Artifact,
     val license: String? = null,
-    val lastRelease: LocalDate? = null
+    val releaseDate: Date? = null
 )

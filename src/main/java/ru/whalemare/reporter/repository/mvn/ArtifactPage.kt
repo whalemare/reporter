@@ -1,26 +1,40 @@
-
 package ru.whalemare.reporter.repository.mvn
 
 import org.jsoup.nodes.Element
 import pl.droidsonroids.jspoon.ElementConverter
 import pl.droidsonroids.jspoon.annotation.Selector
 import java.net.URI
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.*
+
 
 internal class ArtifactPage {
 
     @Selector("#maincontent > table > tbody > tr:nth-child(1) > td > span")
-    lateinit var license: String
+    var license: String = ""
 
-    @Selector("#maincontent > table > tbody > tr:nth-child(3) > td > a",
-        attr = "href", converter = UriElementConverter::class)
-    lateinit var homepage: URI
-
-//    @Selector("#maincontent > table > tbody > tr:nth-child(4) > td", format = "(MMM dd, yyyy)")
-//    lateinit var date: Date
+    @Selector(
+        "#maincontent > table > tbody > tr:nth-child(3) > td > a",
+        attr = "href", converter = UriElementConverter::class
+    )
+    var homepage: URI = URI.create("")
 
     @Selector("#snippets", converter = SnippetElementConverter::class)
-    lateinit var snippets: List<Snippet>
+    var snippets: List<Snippet> = emptyList()
 
+    @Selector("#maincontent > div.im > div.im-description")
+    var description: String = ""
+
+    @Selector("#maincontent > table > tbody > tr:nth-child(4) > td > a > b")
+    var usedBy: String = ""
+
+    @Selector("#maincontent > div.im > div.im-header > h2 > a")
+    var name: String = ""
+
+    @Selector("#snippets > div > div > div > table", converter = ReleaseDateElementConverter::class)
+    var releaseDate: Date? = null
 
     internal class SnippetElementConverter : ElementConverter<List<Snippet>> {
 
@@ -36,6 +50,50 @@ internal class ArtifactPage {
                 snippets.add(Snippet(type, textarea.`val`()))
             }
             return snippets.toList()
+        }
+    }
+
+    internal class ReleaseDateElementConverter : ElementConverter<Date> {
+
+        override fun convert(table: Element?, selector: Selector): Date? {
+            if (table == null) return null
+
+            return try {
+                val textDate = table.getElementsByClass("grid")
+                    .select("tr")
+                    .eachText()
+                    .firstOrNull { it.contains("Date (") } ?: return null
+
+                val dateNormalize = textDate.removePrefix("Date (")
+                    .removeSuffix(")")
+                    .trim()
+                val date = SimpleDateFormat("MMM dd, YYYY", Locale.ENGLISH)
+                    .parse(dateNormalize)
+                date
+            } catch (e: Exception) {
+                null
+            }
+        }
+
+    }
+
+
+    internal class LatestReleaseDateElementConverter : ElementConverter<LocalDate> {
+
+        override fun convert(table: Element?, selector: Selector): LocalDate? {
+            if (table == null) return null
+
+            return try {
+                val textDate = table.getElementsByClass("grid versions")
+                    .select("tr")[1]
+                    .select("td")
+                    .last()
+                    .text()
+                val date = SimpleDateFormat("MMM, YYYY", Locale.US).parse(textDate)
+                date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            } catch (e: Exception) {
+                null
+            }
         }
 
     }

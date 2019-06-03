@@ -1,6 +1,5 @@
 package ru.whalemare.reporter.cli
 
-import ru.whalemare.reporter.Reporter
 import java.io.File
 import java.util.concurrent.Callable
 
@@ -8,8 +7,11 @@ import java.util.concurrent.Callable
  * @since 2019
  * @author Anton Vlasov - whalemare
  */
-class FileController(private val file: File) : Callable<Int> {
-    override fun call(): Int {
+class FileController(
+    private val file: File
+) : Callable<List<String>> {
+
+    override fun call(): List<String> {
         return if (file.exists()) {
             if (file.isDirectory) {
                 processDirectory(file)
@@ -17,20 +19,19 @@ class FileController(private val file: File) : Callable<Int> {
                 processFile(file)
             }
         } else {
-            Code.FILE_NOT_EXISTS
+            return emptyList()
         }
     }
 
-    private fun processDirectory(file: File): Int {
+    private fun processDirectory(file: File): List<String> {
         val gradle = file.listFiles { dir, name -> name == "build.gradle" }.first()
         return processFile(gradle)
     }
 
-    private fun processFile(file: File): Int {
+    private fun processFile(file: File): List<String> {
         val lines = file.readLines().map(String::trim)
         val dependencies = extractBlockCode(lines, "dependencies")
-        Reporter(dependencies).run()
-        return Code.SUCCESS
+        return dependencies
     }
 
     private fun extractBlockCode(lines: List<String>, blockName: String): List<String> {

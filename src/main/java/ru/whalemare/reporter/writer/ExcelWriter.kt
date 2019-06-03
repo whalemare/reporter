@@ -1,22 +1,18 @@
 package ru.whalemare.reporter.writer
 
-import ru.whalemare.reporter.model.Dependency
 import org.apache.poi.ss.usermodel.IndexedColors
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import ru.whalemare.reporter.model.Dependency
 import java.io.FileOutputStream
-import java.time.ZoneId
-import java.util.*
-
-
 
 
 /**
  * @since 2019
  * @author Anton Vlasov - whalemare
  */
-class ExcelWriter: Writer<Dependency> {
+class ExcelWriter : Writer<Dependency> {
 
-    private val columns = listOf("Название", "Описание", "Версия", "Ссылка", "Последнее обновление")
+    private val columns = listOf("Название", "Описание", "Версия", "Ссылка", "Лицензия", "Артефакт", "Дата публикации")
 
     override fun write(items: List<Dependency>) {
         val workbook = XSSFWorkbook() // new HSSFWorkbook() for generating `.xls` file
@@ -30,11 +26,12 @@ class ExcelWriter: Writer<Dependency> {
         val headerFont = workbook.createFont()
         headerFont.bold = true
         headerFont.fontHeightInPoints = 14.toShort()
-        headerFont.color = IndexedColors.RED.getIndex()
+        headerFont.color = IndexedColors.BLACK.index
 
         // Create a CellStyle with the font
         val headerCellStyle = workbook.createCellStyle()
         headerCellStyle.setFont(headerFont)
+        headerCellStyle.fillBackgroundColor = IndexedColors.GREY_25_PERCENT.index
 
         // Create a Row
         val headerRow = sheet.createRow(0)
@@ -47,7 +44,6 @@ class ExcelWriter: Writer<Dependency> {
             sheet.autoSizeColumn(i)
         }
 
-
         // Create Cell Style for formatting Date
         val dateCellStyle = workbook.createCellStyle()
         dateCellStyle.dataFormat = createHelper.createDataFormat().getFormat("d MMMM YYYY")
@@ -58,9 +54,10 @@ class ExcelWriter: Writer<Dependency> {
             row.createCell(1).setCellValue(dependency.description)
             row.createCell(2).setCellValue(dependency.artifact.version)
             row.createCell(3).setCellValue(dependency.url)
-            dependency.lastRelease?.let {
-                val date = Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant())
-                row.createCell(4).apply {
+            row.createCell(4).setCellValue(dependency.license)
+            row.createCell(5).setCellValue(dependency.artifact.scheme)
+            dependency.releaseDate?.let { date ->
+                row.createCell(6).apply {
                     cellStyle = dateCellStyle
                     setCellValue(date)
                 }
